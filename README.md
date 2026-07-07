@@ -2,7 +2,7 @@
 
 > A powerful Tailwind CSS plugin that enables arbitrary color utilities without square bracket syntax.
 
-`tailwind-plugin-hexcolor` recursively scans your project for custom color utility classes and automatically generates the required CSS using Tailwind's `matchUtilities` API.
+`tailwindcss-hexcolor` recursively scans your project for custom color utility classes and automatically generates the required CSS using Tailwind's `matchUtilities` API.
 
 It supports **Tailwind CSS v4** (CSS-first configuration) and **Tailwind CSS v3** (JavaScript configuration) out of the box.
 
@@ -329,7 +329,7 @@ MIT License.
 I would also recommend adding badges at the very top to make the README look more professional:
 
 ```md
-# tailwind-plugin-hexcolor
+# tailwindcss-hexcolor
 
 ![npm](https://img.shields.io/npm/v/tailwindcss-hexcolor)
 ![downloads](https://img.shields.io/npm/dm/tailwindcss-hexcolor)
