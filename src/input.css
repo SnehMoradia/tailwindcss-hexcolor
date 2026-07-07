@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@source not "./src/output.css";
+@source not "./colors-cache.json";
+@plugin "../index.js" {
+  srcDir: "./src";
+  cachePath: "./colors-cache.json";
+  inputCssPath: "./src/input.css";
+};

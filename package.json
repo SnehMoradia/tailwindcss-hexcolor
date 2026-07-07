@@ -1,0 +1,52 @@
+{
+  "name": "tailwindcss-hexcolor",
+  "version": "1.0.0",
+  "description": "Tailwind CSS v4 plugin that automatically generates utilities for custom hex color classes like bg-fff, text-000, border-ff0000, gradients and more.",
+  "main": "index.js",
+  "type": "commonjs",
+  "license": "MIT",
+  "author": "Sneh Moradia",
+  "homepage": "https://github.com/SnehMoradia/tailwindcss-hexcolor",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SnehMoradia/tailwindcss-hexcolor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SnehMoradia/tailwindcss-hexcolor/issues"
+  },
+  "keywords": [
+    "tailwindcss",
+    "tailwind",
+    "tailwindcss-plugin",
+    "plugin",
+    "hex",
+    "hex-color",
+    "dynamic-colors",
+    "gradient",
+    "tailwind-v4",
+    "css"
+  ],
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "npx @tailwindcss/cli -i src/input.css -o src/output.css",
+    "watch": "npx @tailwindcss/cli -i src/input.css -o src/output.css --watch",
+    "test": "node -e \"console.log('No tests yet')\""
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.2",
+    "tailwindcss": "^4.3.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
