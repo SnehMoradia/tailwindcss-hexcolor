@@ -19,6 +19,101 @@ function parseColorUnit(val) {
   return val.replace(/_/g, ".");
 }
 
+const COLOR_SPACES = [
+  "srgb", "srgb-linear", "lab", "lch", "oklab", "oklch", "xyz", "xyz-d50", "xyz-d65", "hsl", "hwb"
+];
+
+const NAMED_COLORS = [
+  "aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond",
+  "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue",
+  "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkgrey",
+  "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred", "darksalmon", "darkseagreen",
+  "darkslatealignment", "darkslateblue", "darkslategray", "darkslategrey", "darkturquoise", "darkviolet",
+  "deeppink", "deepskyblue", "dimgray", "dimgrey", "dodgerblue", "firebrick", "floralwhite", "forestgreen",
+  "fuchsia", "gainsboro", "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "grey", "honeydew",
+  "hotpink", "indianred", "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon",
+  "lightblue", "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgray", "lightgreen", "lightgrey",
+  "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightslategrey", "lightsteelblue",
+  "lightyellow", "lime", "limegreen", "linen", "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid",
+  "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred",
+  "midnightblue", "mintcream", "mistyrose", "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab",
+  "orange", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip",
+  "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "rebeccapurple", "red", "rosybrown", "royalblue",
+  "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue",
+  "slategray", "slategrey", "snow", "springgreen", "steelblue", "tan", "teal", "thistle", "tomato", "turquoise",
+  "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen", "transparent", "currentcolor", "currentColor"
+];
+
+function isValidColor(val) {
+  if (parseColorClass(val) !== null) return true;
+  return NAMED_COLORS.includes(val.toLowerCase());
+}
+
+function formatMixedColor(val) {
+  const parsed = parseColorClass(val);
+  if (parsed) return parsed;
+  return val;
+}
+
+function parseColorToken(token) {
+  const match = token.match(/^(.*?)(?:-|_)([0-9]+(?:[._][0-9]+)?%?)$/);
+  if (match) {
+    const colorPart = match[1];
+    const percentPart = match[2].replace(/_/g, ".");
+    if (isValidColor(colorPart)) {
+      const pct = percentPart.endsWith("%") ? percentPart : `${percentPart}%`;
+      return { color: formatMixedColor(colorPart), percentage: pct };
+    }
+  }
+  
+  if (isValidColor(token)) {
+    return { color: formatMixedColor(token), percentage: null };
+  }
+  
+  return null;
+}
+
+function parseColorMix(value) {
+  const mixMatch = value.match(/^(?:mix|colormix|color-mix)(?:-|_)(.+)$/i);
+  if (!mixMatch) return null;
+
+  const argsString = mixMatch[1];
+  const parts = argsString.split(/--|__/);
+
+  let colorSpace = "srgb";
+  let color1Token = null;
+  let color2Token = null;
+
+  if (parts.length >= 3) {
+    const first = parts[0].toLowerCase();
+    if (first.startsWith("in-") || first.startsWith("in_")) {
+      colorSpace = first.slice(3);
+    } else if (COLOR_SPACES.includes(first)) {
+      colorSpace = first;
+    }
+    color1Token = parts[1];
+    color2Token = parts[2];
+  } else if (parts.length === 2) {
+    color1Token = parts[0];
+    color2Token = parts[1];
+  } else {
+    return null;
+  }
+
+  if (!color1Token || !color2Token) return null;
+
+  const c1 = parseColorToken(color1Token);
+  const c2 = parseColorToken(color2Token);
+
+  if (!c1 || !c2) return null;
+
+  const space = COLOR_SPACES.includes(colorSpace) ? colorSpace : "srgb";
+  const firstColorStr = c1.percentage ? `${c1.color} ${c1.percentage}` : c1.color;
+  const secondColorStr = c2.percentage ? `${c2.color} ${c2.percentage}` : c2.color;
+
+  return `color-mix(in ${space}, ${firstColorStr}, ${secondColorStr})`;
+}
+
 function parseColorClass(value) {
   // 1. HEX
   if (HEX_REGEX.test(value)) {
@@ -65,6 +160,12 @@ function parseColorClass(value) {
     if (/^[0-9.]+(?:%|deg|rad|turn)?$/.test(s) && !s.endsWith("%")) s += "%";
     if (/^[0-9.]+(?:%|deg|rad|turn)?$/.test(l) && !l.endsWith("%")) l += "%";
     return `hsla(${h}, ${s}, ${l}, ${a})`;
+  }
+
+  // 6. color-mix()
+  if (value.startsWith("mix-") || value.startsWith("colormix-") || value.startsWith("color-mix-")) {
+    const mixed = parseColorMix(value);
+    if (mixed) return mixed;
   }
 
   return null;
@@ -143,7 +244,7 @@ function extractHexColorsByType(srcDir) {
   });
   const files = getFilesRecursively(srcDir);
   
-  const classRegex = new RegExp(`(${PREFIXES.join("|")})-([0-9a-fA-F]{3,8}|(?:rgb|rgba|hsl|hsla)(?:-|_)[0-9a-zA-Z._%-]+)\\b`, "g");
+  const classRegex = new RegExp(`(${PREFIXES.join("|")})-([0-9a-fA-F]{3,8}|(?:rgb|rgba|hsl|hsla|mix|colormix|color-mix)(?:-|_)[0-9a-zA-Z._%-]+)\\b`, "g");
 
   files.forEach((file) => {
     if (hasValidExtension(file)) {

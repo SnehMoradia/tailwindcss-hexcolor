@@ -12,7 +12,7 @@
   <div class="bg-fff"></div>
 
   <!-- Testing all 16 hex color prefixes -->
-  <div class="bg-111111 text-222222 border-333333 outline-444444 ring-555555 shadow-666666 fill-777777 stroke-888888 accent-999999 caret-aaaaaa decoration-bbbbbb placeholder-cccccc divide-dddddd from-eeeeee via-112233 to-445566">
+  <div >
     <input placeholder="Type here" class="placeholder-cccccc" />
     <div class="divide-dddddd">
       <div>Child 1</div>
@@ -21,8 +21,13 @@
   </div>
 
   <!-- Testing RGB, RGBA, HSL, HSLA color systems -->
-  <div class="bg-rgb-120-240-50 text-rgba-255-0-0-0.5 border-hsl-200-100-50 decoration-hsla-120-100-40-0.8 p-5 border-2">
+  <div class="bg-rgb-120-240-50 decoration-hsla-120-42.88-11.33-0.8 bg-rgba-0-200-100-0_4 text-rgb-12.5-24.8-250 border-rgba-0-127.5-255-0.75 underline p-5 border-2">
     RGB/RGBA/HSL/HSLA Test Block
+  </div>
+
+  <!-- Testing CSS color-mix() function support -->
+  <div class="bg-mix-in-srgb--red-30--blue text-mix-in-oklch--rgb-255-0-0-40--hsl-120-100-50 border-mix-fff-20--000 border-4 p-5">
+    color-mix() Test Block
   </div>
 
   <div class="text-aaaaaa bg-5746AF p-6 border-ffb900 border">sdsdsdsdsd</div>

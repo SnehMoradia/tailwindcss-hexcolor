@@ -8,16 +8,16 @@ Support is provided out-of-the-box for **Tailwind CSS v4** (CSS-first config) an
 
 ## Key Features
 
- - **Multiple Color Formats**: Write classes using **HEX**, **RGB**, **RGBA**, **HSL**, or **HSLA** values (e.g. `bg-fff`, `text-rgb-255-0-0`, `border-rgba-0-0-255-0_5`, `bg-hsl-200-100-50`, `text-hsla-120-100-40-0_8`).
+ - **Multiple Color Formats**: Write classes using **HEX**, **RGB**, **RGBA**, **HSL**, **HSLA**, or even CSS **`color-mix()`** values (e.g. `bg-fff`, `text-rgb-255-0-0`, `border-rgba-0-0-255-0_5`, `bg-mix-in-srgb--red-30--blue`).
 - **16 Core CSS Prefixes Supported**: From backgrounds and text to gradients, borders, shadows, outline, accents, placeholder, caret, and divide.
 - **Virtually Every Template Extension Scanned**: Automatically scans HTML, JS, JSX, TS, TSX, Vue, Svelte, Astro, PHP, Blade templates, Twig templates, ERB, Liquid, MDX, and standard Markdown.
-- **Native Watcher & Automatic Rebuilding**: Starts a lightweight recursive watcher in development, updating the cache and triggering a Tailwind rebuild whenever you update your templates.
+- **Native Watcher & Automatic Rebuilding**: Automatically integrates with Tailwind v4's compiler to update classes instantly in watch mode.
 
 ---
 
 ## Supported Utility Classes
 
-Any arbitrary HEX, RGB, RGBA, HSL, or HSLA code can be combined with the following prefixes:
+Any arbitrary HEX, RGB, RGBA, HSL, HSLA, or `color-mix()` color can be combined with the following prefixes:
 
 ### Color Formats
 1. **HEX**: `333`, `fff`, `ff0000`, `ff000080` (e.g. `bg-333`, `text-ff000080`)
@@ -25,8 +25,13 @@ Any arbitrary HEX, RGB, RGBA, HSL, or HSLA code can be combined with the followi
 3. **RGBA**: `rgba-r-g-b-a` or `rgba_r_g_b_a` (e.g. `bg-rgba-255-0-0-0.5`, `bg-rgba_255_0_0_0_5` -> `rgba(255, 0, 0, 0.5)`)
 4. **HSL**: `hsl-h-s-l` or `hsl_h_s_l` (e.g. `bg-hsl-200-100-50` -> `hsl(200, 100%, 50%)`)
 5. **HSLA**: `hsla-h-s-l-a` or `hsla_h_s_l_a` (e.g. `bg-hsla-120-100-40-0.8`, `bg-hsla_120_100_40_0_8` -> `hsla(120, 100%, 40%, 0.8)`)
+6. **color-mix()**: `mix-[color-space]--[color-1]-[percentage]--[color-2]` or `mix--[color-1]-[percentage]--[color-2]` (which defaults to `srgb`).
+   - Uses double-dashes `--` or double-underscores `__` to separate the space, color 1, and color 2.
+   - Example 1: `bg-mix-in-srgb--red-30--blue` -> `color-mix(in srgb, red 30%, blue)`
+   - Example 2: `text-mix-in-oklch--rgb-255-0-0-40--hsl-120-100-50` -> `color-mix(in oklch, rgb(255, 0, 0) 40%, hsl(120, 100%, 50%))`
+   - Example 3: `border-mix-fff-20--000` -> `color-mix(in srgb, #fff 20%, #000)`
 
-*Note: For alpha channels in RGBA/HSLA, underscores `_` are converted to decimals (dots) dynamically (e.g., `0_5` -> `0.5`).*
+*Note: For alpha channels in RGBA/HSLA and percentages in color-mix, underscores `_` are converted to decimals (dots) dynamically (e.g., `0_5` -> `0.5`, `42.5` -> `42.5`).*
 
 ### Supported Prefixes
 
