@@ -331,10 +331,10 @@ I would also recommend adding badges at the very top to make the README look mor
 ```md
 # tailwindcss-hexcolor
 
-![npm](https://img.shields.io/npm/v/tailwindcss-hexcolor)
-![downloads](https://img.shields.io/npm/dm/tailwindcss-hexcolor)
-![license](https://img.shields.io/npm/l/tailwindcss-hexcolor)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-v3%20%7C%20v4-38BDF8)
+[![npm](https://img.shields.io/npm/v/tailwindcss-hexcolor)
+[![downloads](https://img.shields.io/npm/dm/tailwindcss-hexcolor)
+[![license](https://img.shields.io/npm/l/tailwindcss-hexcolor)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v3%20%7C%20v4-38BDF8)
 ```
 
 This gives your README a polished, production-quality appearance similar to popular open-source Tailwind plugins.
